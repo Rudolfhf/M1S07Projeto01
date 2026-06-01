@@ -5,52 +5,103 @@ from datetime import datetime
 products = 'arquivos\olist_products_dataset.csv'
 orders = 'arquivos\olist_orders_dataset.csv'
 
-def ler_arquivo(arquivo):
+dimencoes = ['product_weight_g', 'product_length_cm', 'product_height_cm', 'product_width_cm']
 
-    with open(arquivo, "r", encoding='utf-8') as csvfile:
-        leitor = csv.DictReader(csvfile, delimiter=',')
-        
-        #Contadores
-        qtd_product_weight_g = 0
-        qtd_product_length_cm = 0
-        qtd_product_height_cm = 0
-        qtd_product_width_cm = 0
+def tirarMediana(arquivo, nomecategoria, campos_vazios):
+    with open(arquivo, "r", newline='', encoding='utf-8') as csvfile:
+        leitor = csv.DictReader(csvfile, delimiter=',') 
+        #mediana = sum(leitor['product_weight_g'])
+        total = 0
+        quantidade = 0
+        soma = {campo: 0 for campo in campos_vazios}
+        quantidade = {campo: 0 for campo in campos_vazios}
+        print(f"Iniciando Calculo da soma para cada dimensão da categoria:{nomecategoria}")
+        for linha in leitor:        
+            if linha['product_category_name'] == nomecategoria:
+                
+                for campo in campos_vazios:
+                    
+                    if linha[campo] not in ('', None):
+                        soma[campo] += int(linha[campo])
+                        quantidade[campo] += 1
+                 
+                              
+        print(f"Categoria: {nomecategoria}")
+        print(f"Soma Total: {soma}")
+        print(f"Quantidade: {quantidade}")
 
-        #Correção dos nulos e vazius na coluna "product_category_name" por "Sem Categoria"
+        print("\nCalculando a média para ser preenchida nas dimensoes vazias...")
+
+        for campo in campos_vazios:
+
+            if quantidade[campo] > 0:
+                media = soma[campo] / quantidade[campo]
+                print(f"{campo}: {media}")
+                #return media
+                
+            else:
+                print(f"{campo}: sem dados")    
+
+
+def funcValidar_tratar(arquivo):
+    #Contadores
+    qtd_product_nulos = 0
+    linhas_descartadas = []
+    #dimencoes = ['product_weight_g', 'product_length_cm', 'product_height_cm', 'product_width_cm']
+    linhas_sem_dimensoes = []
+    campos_vazios = []
+    
+    with open(arquivo, "r", newline='', encoding='utf-8') as csvfile:
+        leitor = csv.DictReader(csvfile, delimiter=',')     
         
-        for linha in leitor:
-           
+        for linha in leitor:  
+            #Correção dos nulos e vazius na coluna "product_category_name" por "Sem Categoria"                           
             if linha and not linha['product_category_name']:             
                 linha['product_category_name'] = "Sem Categoria"
-                print(linha)
-
-            #| product_weight_g | product_length_cm | product_height_cm | product_width_cm |    
-            #Verificar quantidade de nulos em product weightm length, heightm width
-            if not linha['product_weight_g']:
-                qtd_product_weight_g += 1             
-                print(linha)
+                              
+            #Verificar quantidade de nulos nas dimensões:
+            #linhas_sem_dimencoes = list(filter(lambda campo: not linha[campo] and linha['product_category_name'] != 'Sem Categoria', dimencoes))
             
-            if not linha['product_length_cm']:
-                qtd_product_length_cm += 1             
-                print(linha)
+            campos_vazios = list(filter(lambda campo: not linha[campo], dimencoes))
 
-            if not linha['product_height_cm']:
-                qtd_product_height_cm += 1             
-                print(linha)
+            
+            if campos_vazios and linha['product_category_name'] != "Sem Categoria":
+                linhas_sem_dimensoes.append(linha) 
+                print("============================")
+                print("Novo Produto com dimensoes vazias identificado\n")
+                print(f"ID:{linha['product_id']}\n Categoria:{linha['product_category_name']}\n Tratar:{campos_vazios} ")
+                print("============================")
+                for linha in linhas_sem_dimensoes:
+                    cat = linha['product_category_name']
+                        
+                tirarMediana(arquivo, cat, campos_vazios) 
 
-            if not linha['product_width_cm']:
-                qtd_product_width_cm += 1
-                print("AQUI FOI")             
-                print(linha)
 
+        print(f"Quantidade de linhas sem dimensoes: {len(linhas_sem_dimensoes)}")
+
+        '''
+            if not linha['product_weight_g'] or not linha['product_length_cm'] or not linha['product_height_cm'] or not linha['product_width_cm']:
+                qtd_product_nulos += 1             
+                print(linha)
+                if linha['product_category_name'] == 'Sem Categoria':
+                    print("A linha será descartada, pois não há categoria e nem dimensões")
+                    linhas_descartadas.append(linha['product_id'])
+                #elif linha['product_category_name'] ison linha['product_category_name'].products
+                else:
+                    print(f"O produto {linha['product_category_name']} cujo ID: {linha['product_id']} deve receber a mediana dos demais semelhantes")
+            
         print("RELATORIO")
-        print(f"product_weight_g NULOS: = {qtd_product_weight_g}")
-        print(f"product_length_cm NULOS: = {qtd_product_length_cm}")
-        print(f"product_HEIGHT_cm NULOS: = {qtd_product_height_cm}")
-        print(f"product_WIDTH_cm NULOS: = {qtd_product_width_cm}")
-        #salvar = csv.DictWriter()
+        print(f"Quantidade de Nulos Identificado nas colunas de dimensões: = {qtd_product_nulos}")
+        print(f"Linhas que serão Descartadas por produto ID {linhas_descartadas}")
+        '''
 
-def limpar_padronizar(arquivo):
+        '''with open(arquivo, 'x', encoding='utf-8') as csvfile:
+            print(aaa)
+       
+            salvar = csv.DictWriter(csvfile
+            '''
+
+def funcPadronizar_regex(arquivo):
     with open(arquivo, "r", encoding='utf-8') as csvfile:
 
         leitor = csv.DictReader(csvfile, delimiter=',')
@@ -66,7 +117,7 @@ def limpar_padronizar(arquivo):
             print(linha)
                                                     
 
-def filtrar(arquivo_dois):
+def funcRegranegocio_cancelados(arquivo_dois):
     with open(arquivo_dois, 'r', encoding='utf-8') as cvsfile:
         leitor = csv.DictReader(cvsfile, delimiter=',')
 
@@ -122,7 +173,7 @@ def filtrar(arquivo_dois):
 
 
 #Função para converter para formato brasileiro dd/mm/aa
-def formatacaoTemporal(arquivo):
+def funcFormatarData(arquivo):
         print("A DATA É")
         with open(arquivo, 'r', encoding='utf-8') as csvfile:
             leitor = csv.DictReader(csvfile, delimiter=',')
@@ -143,24 +194,25 @@ def formatacaoTemporal(arquivo):
                 except ValueError as erro:
                     qtd_nulos.append(erro)
                     
-                finally:
-                    print(f"modificação feita com sucesso")
+                #finally:
+                    #print(f"modificação feita com sucesso")
             print(f"Quantidade de linhas nulas {len(qtd_nulos)}")
                 
-            #lambda x: x, datetime.strptime(x, '%Y/%m/%d %H:%M:%S'), linha['order_approved_at']
+            
 
 
 def relatorioFinal():
-    print("RELATORIO")
+    print("PROGRAMA SANITIZADO COM SUCESSO:")
+    print("RELATORIO FINAL")
        
        
                 
 
 
                      
-#ler_arquivo(products)      
+#validacao_Ausentes(products)      
 #limpar_padronizar(products)
 #filtrar(orders)
-formatacaoTemporal(orders)
+#formatacaoTemporal(orders)
 
 # n esquecer de remover a linha q add no csv

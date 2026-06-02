@@ -1,4 +1,4 @@
-from funcoes import calcularMedia, funcValidar_tratar, funcPadronizar_regex, funcRegranegocio_cancelados, funcFormatarData, total_linhas_processadas
+from funcoes import calcularMedia, funcValidar_tratar, funcPadronizar_regex, funcRegranegocio_cancelados, funcFormatarData
 
 products = 'arquivos\olist_products_dataset.csv'
 orders = 'arquivos\olist_orders_dataset.csv'
@@ -19,24 +19,26 @@ print(padronizarCategorias)
 
 #3
 print("\n" + 46 * "=")
-print("Iniciando Verificação da regra de negócios...")
+print("Iniciando Verificação da regra de negócios")
 print(46 * "=")
 ordersType, contagem_cancelados_semdata, pedidosCancelados, contagem_geral_cancelados, total_linhas_orders = funcRegranegocio_cancelados(orders)
-#A ver no relatório
+print("Hipótese não confirmada, consta no relatório")
+#No relatório
 
 #4
 print("\n" + 46 * "=")
 print("Tratamento de datas para formato simplificado Brasileiro")
 print(46 * "=")
-novaData = (funcFormatarData)
+novaData = funcFormatarData(orders)
+print(novaData)
 
-total_linhas_processadas = (total_linhas_products + total_linhas_orders)
+total_linhas = (total_linhas_products + total_linhas_orders)
 
 print("\n" + 46 * "*")
 print(5 * "===//===")
 print(2 * "//===//" + " RELATORIO " + 2 * "//===//")
 print(5 * "===//===")
-print(f"Total de linhas processadas: {total_linhas_processadas}, Products:{total_linhas_products} - Orders:{total_linhas_orders}")
+print(f"Total de linhas processadas: Products:[{total_linhas_products}] + Orders:[{total_linhas_orders}] = {total_linhas} ")
 print(f"Total de registros nulos corrigidos: {total_nulos_corrigidos}")
 print(f"Total de pedidos [Cancelados]: {contagem_geral_cancelados} ")
 
@@ -47,5 +49,5 @@ print(f"Quantidade de Nulos na coluna [order_delivered_customer_date]:>>{contage
 print(f"Distribuição por status:{ordersType}")
 print(f"Total de pedidos com [Data de Entrega] nula e Status: cancelado: {pedidosCancelados}")
 print("Conclusão: ")
-print("Nem todos os registros que possuem [Data de Entrega vazia] são pedidos cancelados\npois há pedidos em que o processamento não foi finalizado")
+print("A hipótese não é verdadeira, porque nem todos os registros que possuem [Data de Entrega Vazia/Nula] \nsão pedidos com 'Status Cancelado' pois há pedidos em que o processamento não foi finalizado")
 print(46 * "*")  

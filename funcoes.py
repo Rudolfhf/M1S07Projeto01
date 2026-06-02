@@ -2,11 +2,12 @@ import csv
 import re
 from datetime import datetime
 
-products = 'arquivos\olist_products_dataset.csv'
-orders = 'arquivos\olist_orders_dataset.csv'
+#products = 'arquivos\olist_products_dataset.csv'
+#orders = 'arquivos\olist_orders_dataset.csv'
 
-
+total_linhas_processadas = 0
 dimencoes = ['product_weight_g', 'product_length_cm', 'product_height_cm', 'product_width_cm']
+
 
 def calcularMedia(arquivo, nomecategoria, campos_vazios):
     with open(arquivo, "r", newline='', encoding='utf-8') as csvfile:
@@ -17,7 +18,7 @@ def calcularMedia(arquivo, nomecategoria, campos_vazios):
         soma = {campo: 0 for campo in campos_vazios}
         quantidade = {campo: 0 for campo in campos_vazios}
         medias = {}
-        print(f"Iniciando Calculo da soma para cada dimensão da categoria:{nomecategoria}")
+        print(f"===> Iniciando Calculo da soma para cada dimensão da categoria:{nomecategoria}")
         for linha in leitor:                   
             if linha['product_category_name'] == nomecategoria:
                   for campo in campos_vazios:                  
@@ -29,7 +30,7 @@ def calcularMedia(arquivo, nomecategoria, campos_vazios):
         print(f"Soma Total: {soma}")
         print(f"Quantidade: {quantidade}")
 
-        print("\nCalculando a média para ser preenchida nas dimensoes vazias...")
+        print("\n===> Calculando a média para ser preenchida nas dimensoes vazias...")
 
         for campo in campos_vazios:
 
@@ -41,12 +42,12 @@ def calcularMedia(arquivo, nomecategoria, campos_vazios):
             else:
                 print(f"{campo}: sem dados") 
                 return print("sem dados")   
-        print("==========================================")
+        print("------------------------------------------")
         return medias
 
 def funcValidar_tratar(arquivo):
 
-    total_linhas_processadas = 0
+    global total_linhas_processadas
     total_nulos_corrigidos = 0
     #Contadores
     qtd_product_nulos = 0
@@ -75,8 +76,8 @@ def funcValidar_tratar(arquivo):
             if campos_vazios and linha['product_category_name'] != "Sem Categoria":
                 
                 linhas_sem_dimensoes.append(linha) 
-                print("=============================================")
-                print("Novo Produto com dimensoes vazias identificado\n")
+                print("---------------------------------------------")
+                print("===> Novo Produto com dimensoes vazias identificado\n")
                 print(f"ID:{linha['product_id']}\n Categoria:{linha['product_category_name']}\n Tratar:{campos_vazios} ")
                 print("---------------------------------------------")
                 #for linha in linhas_sem_dimensoes:
@@ -85,9 +86,9 @@ def funcValidar_tratar(arquivo):
                 resultado = calcularMedia(arquivo, cat, campos_vazios)
                 try:
                     for campo, media in resultado.items():
-                        linha[campo] = round(media, 2)                   
+                        linha[campo] = int(round(media))  #round(media, 2)                  
                         total_nulos_corrigidos += 1
-                    print(f"TESTE FINAL SE FOI CORRIGIDO === > {linha}")
+                    print(f"===> RESULTADO CORREÇÃO DIMENSÕES: \n{linha}")
                 except:
                     print("***Média não corrigida!!! Não há Categoria identificada ****")
                 
@@ -95,32 +96,25 @@ def funcValidar_tratar(arquivo):
             
         #print(f"Quantidade de linhas sem dimensoes: {len(linhas_sem_dimensoes)}") 
                  
-        return resultados, total_linhas_processadas, total_nulos_corrigidos
-        
-        '''
-            with open(arquivo, 'x', encoding='utf-8') as csvfile:
-            print(aaa)
-       
-            salvar = csv.DictWriter(csvfile
-        '''
+        return resultados, total_nulos_corrigidos, total_linhas_processadas
 
 def funcPadronizar_regex(arquivo):
     with open(arquivo, "r", encoding='utf-8') as csvfile:
-
-        leitor = csv.DictReader(csvfile, delimiter=',')
-        
-        for linha in leitor:
-
+        resultados = []
+        leitor = csv.DictReader(csvfile, delimiter=',')    
+        for linha in leitor:       
             #Conversão para letras minúsculas e remoção de espaços em brancos
             if not linha['product_category_name'].islower():             
                 linha['product_category_name'] = linha['product_category_name'].lower().strip()
                           
             #Remoção de caractéres especiais e pontuações em nomes das categorias
-            linha['product_category_name'] = re.sub(r'[^\w\s]','',linha['product_category_name'])
-            print(linha)
+            resultado = linha['product_category_name'] = re.sub(r'[^\w\s]','',linha['product_category_name'])
+            resultados.append(resultado)
+        return f"Demonstração das últimas três linhas: {resultados[-3:]}"
                                                     
 
 def funcRegranegocio_cancelados(arquivo_dois):
+    global total_linhas_processadas
     with open(arquivo_dois, 'r', encoding='utf-8') as cvsfile:
         leitor = csv.DictReader(cvsfile, delimiter=',')
 
@@ -134,12 +128,16 @@ def funcRegranegocio_cancelados(arquivo_dois):
         'order_approved': 0
        }
 
-        contador_vazios = 0
+        contagem_cancelados_semdata = 0
+        contagem_geral_cancelados = 0
     
         for linha in leitor:
-            if not linha['order_delivered_customer_date']:
-
-                contador_vazios += 1
+            total_linhas_processadas += 1
+            if linha['order_status'] == 'canceled' and linha['order_delivered_customer_date']:               
+                contagem_geral_cancelados += 1
+            
+            elif not linha['order_delivered_customer_date']:
+                contagem_cancelados_semdata += 1
 
                 if linha['order_status'] == 'canceled':
                     ordersType['order_canceled'] += 1
@@ -168,13 +166,10 @@ def funcRegranegocio_cancelados(arquivo_dois):
                 else:
                     print("N IDENTIFICADO")
                     print(linha['order_status'])
+
+        contagem_geral_cancelados += contagem_cancelados_semdata
         
-        print("************************************")          
-        print("\nResultado Regra de Negócio")
-        print(f"Quantidade de datas de entregas vazias:{contador_vazios} com seus respectivos valores na coluna order_delivered_customer_date:")
-        #print(f"Ordens Canceladas:{order_canceled}, Ordens Enviadas:{order_shipped}, unavailable:{order_unavailable}")
-        print(f"{ordersType}")
-        return ordersType['order_canceled']
+        return ordersType, contagem_cancelados_semdata, ordersType['order_canceled'], contagem_geral_cancelados, total_linhas_processadas
 
 
 #Função para converter para formato brasileiro dd/mm/aa

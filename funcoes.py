@@ -43,8 +43,6 @@ def calcularMedia(arquivo, nomecategoria, campos_vazios):
                 return print("sem dados")   
         print("==========================================")
         return medias
-        
-
 
 def funcValidar_tratar(arquivo):
 
@@ -85,11 +83,13 @@ def funcValidar_tratar(arquivo):
                 cat = linha['product_category_name']
                         
                 resultado = calcularMedia(arquivo, cat, campos_vazios)
-
-                for campo, media in resultado.items():
-                    linha[campo] = round(media, 2)                   
-                    total_nulos_corrigidos += 1
-                print(f"TESTE FINAL SE FOI CORRIGIDO === > {linha}")
+                try:
+                    for campo, media in resultado.items():
+                        linha[campo] = round(media, 2)                   
+                        total_nulos_corrigidos += 1
+                    print(f"TESTE FINAL SE FOI CORRIGIDO === > {linha}")
+                except:
+                    print("***Média não corrigida!!! Não há Categoria identificada ****")
                 
                 resultados.append(resultado)
             
@@ -169,8 +169,8 @@ def funcRegranegocio_cancelados(arquivo_dois):
                     print("N IDENTIFICADO")
                     print(linha['order_status'])
         
-                      
-        print("Resultado Regra de Negócio")
+        print("************************************")          
+        print("\nResultado Regra de Negócio")
         print(f"Quantidade de datas de entregas vazias:{contador_vazios} com seus respectivos valores na coluna order_delivered_customer_date:")
         #print(f"Ordens Canceladas:{order_canceled}, Ordens Enviadas:{order_shipped}, unavailable:{order_unavailable}")
         print(f"{ordersType}")
@@ -179,17 +179,9 @@ def funcRegranegocio_cancelados(arquivo_dois):
 
 #Função para converter para formato brasileiro dd/mm/aa
 def funcFormatarData(arquivo):
-        print("A DATA É")
         with open(arquivo, 'r', encoding='utf-8') as csvfile:
             leitor = csv.DictReader(csvfile, delimiter=',')
-            '''
-            teste = "2018/05/28 19:45:59"
             
-            dataObjeto = datetime.strptime(f'{teste}', '%Y/%m/%d %H:%M:%S')
-            data_formatada = datetime.strftime(dataObjeto, '%d/%m/%Y %H:%M:%S')
-            print(data_formatada)
-            '''
-
             qtd_nulos = []
             for linha in leitor:
                 try:
@@ -198,19 +190,8 @@ def funcFormatarData(arquivo):
                     print(linha['order_approved_at'])
                 except ValueError as erro:
                     qtd_nulos.append(erro)
-                    
-                #finally:
-                    #print(f"modificação feita com sucesso")
+                                 
             print(f"Quantidade de linhas nulas {len(qtd_nulos)}")
                 
-def relatorioFinal():
-    print("PROGRAMA SANITIZADO COM SUCESSO:")
-    print("RELATORIO FINAL")
-       
-          
-#validacao_Ausentes(products)      
-#limpar_padronizar(products)
-#filtrar(orders)
-#formatacaoTemporal(orders)
 
 # n esquecer de remover a linha q add no csv

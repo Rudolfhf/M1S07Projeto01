@@ -1,4 +1,4 @@
-from funcoes import calcularMedia, funcValidar_tratar, funcPadronizar_regex, funcRegranegocio_cancelados, funcFormatarData, relatorioFinal
+from funcoes import calcularMedia, funcValidar_tratar, funcPadronizar_regex, funcRegranegocio_cancelados, funcFormatarData
 
 products = 'arquivos\olist_products_dataset.csv'
 orders = 'arquivos\olist_orders_dataset.csv'

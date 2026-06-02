@@ -11,7 +11,7 @@ correta na tomada de decisões da empresa.
 
 
 
-Guia de Execução: Passo a passo de como rodar o código.
+# Guia de Execução: Passo a passo de como rodar o código. <h1>
 
 A aplicação foi desenvolvida em sistema operaciona Windows 10 64bit. 
 Para executar o programa é necessário possuir alguns softwares instalados no sistema, como Python 3.10.1 

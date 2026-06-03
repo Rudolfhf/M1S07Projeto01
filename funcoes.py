@@ -75,7 +75,7 @@ def funcValidar_tratar(arquivo):
                 
                 linhas_sem_dimensoes.append(linha) 
                 print("---------------------------------------------")
-                print("===> Novo Produto com dimensoes vazias identificado\n")
+                print("===> Novo Produto com dimensões vazias identificado:\n")
                 print(f"ID:{linha['product_id']}\n Categoria:{linha['product_category_name']}\n Tratar:{campos_vazios} ")
                 print("---------------------------------------------")
                 
@@ -110,7 +110,7 @@ def funcPadronizar_regex(arquivo):
             #Remoção de caractéres especiais e pontuações em nomes das categorias
             resultado = linha['product_category_name'] = re.sub(r'[^\w\s]','',linha['product_category_name'])
             resultados.append(resultado)
-        return f"Demonstração das últimas três linhas após padronização: {resultados[-3:]}"
+        return f"===> Demonstração das últimas três linhas após padronização: \n{resultados[-3:]}"
                                                     
 #Função para verificar a hipótese da regra de negócio
 #A chave ordersType, contabiliza o tipo de status do pedido de todos os registros
@@ -195,6 +195,6 @@ def funcFormatarData(arquivo):
                         
                 linhas_modificadas.append(linha) #Para return no main.py
         print(f"Quantidade de linhas nulas {len(qtd_nulos)}")
-        return f"Exemplo três últimas linhas modificadas{list(linhas_modificadas[-3:])}"    
+        return linhas_modificadas 
 
     

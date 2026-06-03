@@ -4,7 +4,7 @@ Projeto avaliativo 01
 # Descrição do Projeto: 
 A Olist extraiu seus dados para suporte à tomada de decisões e integração com outras aplicações. No entanto, foram identificados travamentos e inconsistências que precisam ser solucionados. Este script foi desenvolvido para verificar e corrigir a extração, executando um pipeline de funções que sanitizam, formatam e validam as informações, viabilizando o uso seguro em ferramentas de Business Intelligence e em modelos preditivos de Machine Learning.
 
-## Guia de Execução: Passo a passo de como rodar o código.
+## Guia de Execução: passos necessários para rodar o script localmente.
 O Script utiliza bibliotecas nativas do python sendo necessário somente a instalação do Python
 Bibliotecas utilizadas:
 

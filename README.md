@@ -1,9 +1,12 @@
 # M1S07Projeto01
-Projeto avaliativo 01
+Projeto avaliativo 01 
+Aluno: Rudolf Hoffmann
+Professor: Junior Prado
+Curso: Machine Learning e Visão Computacional
 
 # Descrição do Projeto: 
-A Olist extraiu seus dados para suporte à tomada de decisões e integração com outras aplicações. No entanto, foram identificados travamentos e inconsistências que precisam ser solucionados. Este script foi desenvolvido para verificar e corrigir a extração, executando um pipeline de funções que sanitizam, formatam e validam as informações, viabilizando o uso seguro em ferramentas de Business Intelligence e em modelos preditivos de Machine Learning.
-Duas listas fornecidas pela equipe de engenharia serão tratadas
+A empresa Olist realizou a extração de seus dados para fins de análise e integração com outros sistemas. Entretanto, foram identificadas inconsistências que podem comprometer a confiabilidade das informações. Este projeto implementa um pipeline de tratamento de dados responsável por identificar, corrigir e validar registros, garantindo maior qualidade aos dados e permitindo sua utilização em ferramentas de Business Intelligence e em modelos de Machine Learning.
+Duas listas fornecidas pela equipe de engenharia serão tratadas:
 - Produtos/products: "olist_products_dataset.csv"
 - Pedidos/orders: "olist_orders_dataset.csv"
 

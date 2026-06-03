@@ -5,7 +5,7 @@ Professor: Junior Prado <br>
 Curso: Machine Learning e Visão Computacional
 
 # Descrição do Projeto: 
-A empresa Olist realizou a extração de seus dados para fins de análise e integração com outros sistemas. Entretanto, foram identificadas inconsistências que podem comprometer a confiabilidade das informações. Este projeto implementa um pipeline de tratamento de dados responsável por identificar, corrigir e validar registros, garantindo maior qualidade aos dados e permitindo sua utilização em ferramentas de Business Intelligence e em modelos de Machine Learning.
+A empresa Olist realizou a extração de seus dados para fins de análise e integração com outros sistemas. Entretanto, foram identificadas inconsistências que podem comprometer a confiabilidade das informações. Este script implementa um pipeline de tratamento de dados responsável por identificar, corrigir e validar registros, garantindo maior qualidade aos dados e permitindo sua utilização em ferramentas de Business Intelligence e em modelos de Machine Learning.
 Duas listas fornecidas pela equipe de engenharia serão tratadas:
 - Produtos/products: "olist_products_dataset.csv"
 - Pedidos/orders: "olist_orders_dataset.csv"

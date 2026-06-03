@@ -1,7 +1,7 @@
 # M1S07Projeto01
-Projeto avaliativo 01 
-Aluno: Rudolf Hoffmann
-Professor: Junior Prado
+Projeto avaliativo 01 <br>
+Aluno: Rudolf Hoffmann <br>
+Professor: Junior Prado <br>
 Curso: Machine Learning e Visão Computacional
 
 # Descrição do Projeto: 
